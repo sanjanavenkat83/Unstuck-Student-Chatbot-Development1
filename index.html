@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNSTUCK — Your Student Problem-Solving Assistant</title>
+  <meta name="description" content="Intelligent, interactive student chatbot to manage assignments, calculate deadlines, generate exam study plans, and conquer academic overwhelm.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Shell -->
+  <div class="app-layout">
+    
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+      <div class="brand-container">
+        <div class="brand-badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">v2.4 LOCAL NLP</span>
+        </div>
+        <div class="brand-title-wrap">
+          <h1 class="brand-title">UNSTUCK<span class="brand-dot">.</span></h1>
+          <span class="brand-tagline">Academic Life Copilot</span>
+        </div>
+      </div>
+
+      <!-- Quick Header Metric Badges -->
+      <div class="header-metrics">
+        <div class="metric-pill metric-pending" title="Pending Tasks">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="header-pending-count">0</span> Pending
+        </div>
+        <div class="metric-pill metric-urgent" title="Urgent Deadlines (<48h)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="header-urgent-count">0</span> Urgent
+        </div>
+      </div>
+
+      <!-- Header Controls -->
+      <div class="header-actions">
+        <button id="toggle-dashboard-btn" class="btn-icon" aria-label="Toggle Tasks Dashboard" title="View Task Dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span class="btn-text">Dashboard</span>
+        </button>
+        <button id="reset-chat-btn" class="btn-icon btn-subtle" aria-label="Reset Conversation" title="Reset Conversation & Context">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span class="btn-text">Reset Chat</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Area -->
+    <main class="workspace-container">
+      
+      <!-- LEFT: Chatbot Interface -->
+      <section class="chat-section" aria-label="UNSTUCK Chat Interface">
+        
+        <!-- Welcome Screen (Displays when conversation is clean) -->
+        <div id="welcome-screen" class="welcome-screen">
+          <div class="welcome-card">
+            <div class="welcome-tag">STUDENT PROBLEM SOLVER</div>
+            <h2 class="welcome-headline">Feeling stuck? Let's fix that.</h2>
+            <p class="welcome-subtext">
+              Your personal student problem-solving companion. Tell me what's going on, and we'll figure it out together.
+            </p>
+            
+            <div class="welcome-action-group">
+              <span class="action-group-label">Quick Actions & Prompts:</span>
+              <div class="quick-action-grid">
+                <button class="quick-prompt-btn" data-prompt="Add an assignment">
+                  <span class="btn-emoji">📝</span>
+                  <div class="btn-details">
+                    <strong>Add an Assignment</strong>
+                    <small>Track new deadlines & homework</small>
+                  </div>
+                </button>
+                <button class="quick-prompt-btn" data-prompt="Create study plan">
+                  <span class="btn-emoji">🗓️</span>
+                  <div class="btn-details">
+                    <strong>Create Study Plan</strong>
+                    <small>Custom daily revision schedule</small>
+                  </div>
+                </button>
+                <button class="quick-prompt-btn" data-prompt="Check my deadlines">
+                  <span class="btn-emoji">⏳</span>
+                  <div class="btn-details">
+                    <strong>Check My Deadlines</strong>
+                    <small>Days remaining & countdowns</small>
+                  </div>
+                </button>
+                <button class="quick-prompt-btn panic-highlight" data-prompt="I'm running out of time">
+                  <span class="btn-emoji">🚨</span>
+                  <div class="btn-details">
+                    <strong>I'm Running Out of Time</strong>
+                    <small>Emergency workload triage</small>
+                  </div>
+                </button>
+                <button class="quick-prompt-btn" data-prompt="View my tasks">
+                  <span class="btn-emoji">📋</span>
+                  <div class="btn-details">
+                    <strong>View My Tasks</strong>
+                    <small>Full prioritized academic list</small>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tip bar -->
+            <div class="natural-input-tip">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span><strong>Natural Language Ready:</strong> Type freely, e.g. <em>"I have a Python project due next Friday"</em> or <em>"Java exam in 5 days, I have 3 hours daily"</em></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Stream Message History -->
+        <div id="chat-messages" class="chat-messages" role="log" aria-live="polite">
+          <!-- Messages will be injected here dynamically -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div id="typing-indicator" class="typing-indicator-wrapper hidden" aria-hidden="true">
+          <div class="typing-bubble">
+            <div class="bot-avatar-mini">U</div>
+            <div class="dots-container">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+            <span class="typing-label">UNSTUCK is thinking...</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Context Suggestions Bar -->
+        <div id="dynamic-chips" class="dynamic-chips-container">
+          <!-- Contextual prompt chips injected by JS -->
+        </div>
+
+        <!-- Input Box Area -->
+        <div class="chat-input-wrapper">
+          <form id="chat-form" class="chat-input-form" autocomplete="off">
+            <div class="input-container">
+              <input 
+                type="text" 
+                id="user-input" 
+                class="chat-input-field" 
+                placeholder="Ask UNSTUCK anything: 'Add assignment', 'Prioritize', 'I'm stressed'..." 
+                aria-label="Your message to UNSTUCK"
+              />
+              <button type="submit" id="send-btn" class="btn-send" aria-label="Send message" title="Send message">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </form>
+          <div class="input-footer-note">
+            <span>Powered by Client-Side NLP Engine • Local Storage Encrypted in Browser • 100% Free & Private</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Interactive Task & Study Dashboard Panel -->
+      <aside id="dashboard-sidebar" class="dashboard-sidebar" aria-label="Academic Dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h3 class="dashboard-heading">Academic Tracker</h3>
+            <span class="dashboard-sub">Smart Task Board & Analytics</span>
+          </div>
+          <button id="close-dashboard-btn" class="btn-icon-sm" aria-label="Close dashboard sidebar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <!-- Progress Overview Widget -->
+        <div class="dashboard-stats-card">
+          <div class="progress-stats-row">
+            <div>
+              <span class="stat-number" id="stat-progress-pct">0%</span>
+              <span class="stat-label">Tasks Completed</span>
+            </div>
+            <div class="stats-mini-counts">
+              <span class="badge-mini badge-done"><strong id="stat-completed-count">0</strong> Done</span>
+              <span class="badge-mini badge-pending"><strong id="stat-pending-count">0</strong> Left</span>
+            </div>
+          </div>
+          <!-- Visual Progress Bar -->
+          <div class="progress-track">
+            <div id="progress-bar-fill" class="progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Smart Recommendation Banner -->
+        <div id="smart-recommendation-card" class="recommendation-card">
+          <div class="recommendation-header">
+            <span class="pulse-indicator"></span>
+            <strong>SMART RECOMMENDATION</strong>
+          </div>
+          <p id="recommendation-text" class="recommendation-text">Add your assignments to get personalized study priorities.</p>
+        </div>
+
+        <!-- Task Filter & Management Header -->
+        <div class="tasks-toolbar">
+          <div class="filter-tabs" role="tablist">
+            <button class="filter-tab active" data-filter="all">All (<span id="count-all">0</span>)</button>
+            <button class="filter-tab" data-filter="urgent">Urgent (<span id="count-urgent">0</span>)</button>
+            <button class="filter-tab" data-filter="pending">Pending (<span id="count-pending">0</span>)</button>
+            <button class="filter-tab" data-filter="completed">Done (<span id="count-completed">0</span>)</button>
+          </div>
+          <button id="open-add-modal-btn" class="btn-add-quick" title="Add assignment manually">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Task
+          </button>
+        </div>
+
+        <!-- Interactive Task Cards List -->
+        <div id="task-list-container" class="task-list-container">
+          <!-- Dynamically filled with task cards -->
+        </div>
+
+        <!-- Clear Completed / Reset Data Footer -->
+        <div class="dashboard-footer-actions">
+          <button id="clear-completed-btn" class="btn-link-action">Clear Completed</button>
+          <button id="sample-tasks-btn" class="btn-link-action">Load Sample Data</button>
+        </div>
+      </aside>
+
+    </main>
+  </div>
+
+  <!-- Quick Add / Edit Task Modal -->
+  <div id="task-modal" class="modal-overlay hidden" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Add Academic Task</h3>
+        <button id="modal-close-btn" class="btn-icon-sm" aria-label="Close modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="task-modal-form" class="modal-form">
+        <input type="hidden" id="modal-task-id" value="">
+        
+        <div class="form-group">
+          <label for="modal-task-title">Subject / Assignment Name *</label>
+          <input type="text" id="modal-task-title" required placeholder="e.g. Python Machine Learning Assignment">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modal-task-type">Task Category</label>
+            <select id="modal-task-type">
+              <option value="assignment">Assignment</option>
+              <option value="exam">Exam / Midterm</option>
+              <option value="project">Course Project</option>
+              <option value="quiz">Quiz / Test</option>
+              <option value="reading">Reading / Lab</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="modal-task-date">Due Date *</label>
+            <input type="date" id="modal-task-date" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modal-task-workload">Estimated Hours Needed</label>
+            <input type="number" id="modal-task-workload" min="0.5" max="100" step="0.5" value="3" placeholder="Hours">
+          </div>
+          <div class="form-group">
+            <label for="modal-task-priority">Priority Override</label>
+            <select id="modal-task-priority">
+              <option value="auto">Smart Auto-Calculate</option>
+              <option value="critical">Critical</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" id="modal-save-btn" class="btn-primary">Save to UNSTUCK</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Application Script -->
+  <script src="script.js"></script>
+</body>
+</html>
